@@ -6,12 +6,13 @@ public class Motor : MonoBehaviour {
     public Brain brain;
     public Gun gun;
     public Camera cam;
+    public Stats stats;
 
     private Vector3 velocity = Vector3.zero;
     private Vector3 rotation = Vector3.zero;
 
     private Quaternion cameraRotationTarget;
-    private float speed = 8f;
+    public float speed = 8f;
 
     private Rigidbody rb;
     private SphereCollider col;
@@ -28,13 +29,18 @@ public class Motor : MonoBehaviour {
     public float dashForce = 20f;
     public GameObject weakPoint;
 
+    public float hp;
+    public float armor;
+
     // Use this for initialization
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         brain.Initialize(this);
         gun.Initialize(this);
+        stats.Initialize(this);
         aSource = GetComponent<AudioSource>();
+        
         
         //gun.Model.transform.localScale = -new Vector3(0.5f, 0.5f, 0.5f);
         //Object.Instantiate(gun.Model, new Vector3(transform.position.x+0.5f, transform.position.y-0.2f, transform.position.z +0.8f), Quaternion.Euler (0,0,180), cam.transform);
@@ -161,7 +167,7 @@ public class Motor : MonoBehaviour {
                     //Target target = hit.transform.GetComponent<Target>();
                     if (hit.collider.name == "weakPoint")
                     {
-                   
+                    hit.collider.GetComponentInParent<Motor>().receiveDMG(120f);
                         Debug.Log("BAM");
                        
                     }
@@ -215,5 +221,16 @@ public class Motor : MonoBehaviour {
     public void dash()
     {
         rb.AddForce(cam.transform.forward * dashForce, ForceMode.Impulse);
+    }
+
+    public void receiveDMG(float dmg)
+    {
+        hp = hp-dmg;
+        if (hp <= 0)
+        {
+            
+            Destroy(this.gameObject);
+            
+        }
     }
 }

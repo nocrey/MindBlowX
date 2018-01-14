@@ -41,7 +41,7 @@ public class Pistol : Gun {
 
             //Target target = hit.transform.GetComponent<Target>();
             Debug.Log(hit.transform.name);
-            if(hit.transform.name == "Unit(Clone)" || hit.transform.name == "Unit2")
+            if(hit.transform.name == "Unit(Clone)" || hit.transform.name == "Unit (1)")
             {
                 Debug.Log("BAM");
                 motor.GetComponentInParent<GameManager>().Swap(motor, hit.transform.GetComponentInParent<Motor>());
