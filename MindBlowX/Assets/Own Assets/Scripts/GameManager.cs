@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     }
     public void Swap(Motor motorShooter, Motor motorHitted)
     {
+        /*
 
         for (int j = 0; j < arrayUnits.Length; j++)
         {
@@ -37,7 +38,7 @@ public class GameManager : MonoBehaviour
                 posHitted = j;
             }
         }
-        /*
+        
          motorShooter.brain = motorHitted.brain;
 
          motorShooter.brain.Initialize(motorShooter);
@@ -47,7 +48,7 @@ public class GameManager : MonoBehaviour
 
          motorHitted.brain.Initialize(motorHitted);
          motorHitted.cam.enabled = true;
-         */
+         
         arrayUnits[posShooter].GetComponent<Motor>().brain = brainHitted;
         arrayUnits[posShooter].GetComponent<Motor>().brain.Initialize(arrayUnits[posShooter].GetComponent<Motor>());
         arrayUnits[posShooter].GetComponent<Motor>().cam.enabled = false;
@@ -56,7 +57,14 @@ public class GameManager : MonoBehaviour
         arrayUnits[posHitted].GetComponent<Motor>().brain.Initialize(arrayUnits[posHitted].GetComponent<Motor>());
         arrayUnits[posHitted].GetComponent<Motor>().gun.Initialize(arrayUnits[posHitted].GetComponent<Motor>());
         arrayUnits[posHitted].GetComponent<Motor>().cam.enabled = true ;
+        */
+        Brain aux;
+        aux = motorShooter.brain;
+        motorShooter.brain = motorHitted.brain;
+        motorHitted.brain = aux;
 
 
+        motorHitted.brain.Initialize(motorHitted);
+        motorShooter.brain.Initialize(motorShooter);
     }
 }

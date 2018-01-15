@@ -12,7 +12,7 @@ public class Enemy : Brain
     {
         motor = _motor;
         motor.cam.enabled = false;
-     
+        motor.aListener.enabled = false ;
 
     }
 

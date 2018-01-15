@@ -11,7 +11,7 @@ public class Player : Brain {
     {
         motor=_motor;
         motor.cam.enabled = true;
-       
+        motor.aListener.enabled = true;
 
     }
 
@@ -43,10 +43,27 @@ public class Player : Brain {
         {
             motor.Jump(motor.jumpForce);
         }
-        if (Input.GetButton("Fire1"))
+        
+
+        if (Input.GetKey("e"))
+        {
+            motor.mindAim = true;
+            if (Input.GetButton("Fire1"))
+            {
+                Debug.Log("MINDSHOT");
+                motor.mindShot();
+            }
+        }
+        if (Input.GetButton("Fire1") && motor.mindAim == false)
         {
             motor.ShootGun();
         }
+        if (Input.GetKeyUp("e"))
+        {
+            motor.mindAim = false;
+        }
+
+
         if (Input.GetKeyDown("r"))
         {
             if (motor.gun.loading == false)

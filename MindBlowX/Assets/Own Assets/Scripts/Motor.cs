@@ -22,6 +22,8 @@ public class Motor : MonoBehaviour {
 
     public ParticleSystem muzzle;
     public AudioSource aSource;
+    public AudioListener aListener;
+    public GameObject deathExplosion;
 
     public float minRotation = -80f;
     public float maxRotation = 80f;
@@ -32,14 +34,18 @@ public class Motor : MonoBehaviour {
     public float hp;
     public float armor;
 
+    public bool mindAim = false;
+
     // Use this for initialization
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        aSource = GetComponent<AudioSource>();
+        aListener = GetComponentInChildren<AudioListener>();
+        
         brain.Initialize(this);
         gun.Initialize(this);
         stats.Initialize(this);
-        aSource = GetComponent<AudioSource>();
         
         
         //gun.Model.transform.localScale = -new Vector3(0.5f, 0.5f, 0.5f);
@@ -84,10 +90,7 @@ public class Motor : MonoBehaviour {
 
         if (cam != null)
         {
-            // cam.transform.Rotate(-cameraRotation);
-            //Vector3 currentRotation = cam.transform.localRotation.eulerAngles;
-            //currentRotation.x = Mathf.Clamp(currentRotation.x, minRotation, maxRotation);
-            //transform.localRotation = Quaternion.Euler(currentRotation);
+            
 
             //CODE WITHOUT SMOOTH
             cam.transform.localRotation = cameraRotationTarget;
@@ -148,6 +151,7 @@ public class Motor : MonoBehaviour {
         {
             cam.fieldOfView = cam.fieldOfView+2;
         }
+       
     }
 
 
@@ -165,44 +169,42 @@ public class Motor : MonoBehaviour {
                 {
 
                     //Target target = hit.transform.GetComponent<Target>();
-                    if (hit.collider.name == "weakPoint")
-                    {
-                    hit.collider.GetComponentInParent<Motor>().receiveDMG(120f);
-                        Debug.Log("BAM");
-                       
-                    }
-                /*if (hit.transform.GetComponent<ControllerUnit>() != null)
+                if (hit.collider.name == "weakPoint")
                 {
-                    if (hit.transform.GetComponent<ControllerUnit>().UnitMind.name == "Enemy")
-                    {
-                        GetComponentInParent<TestStuff>().Swap(mind.id, hit.transform.GetComponent<ControllerUnit>().UnitMind.id);
-                    }
-                    if (target != null)
-                    {
-                        target.TakeDamage(dmg);
-
-                    }
+                    this.GetComponentInParent<GameManager>().Swap(this, hit.transform.GetComponentInParent<Motor>());
                 }
-                /*if (hit.transform.name.ToString() == "Enemy") {
 
-                    SwapVector = hit.transform.position;
-                    SwapRot = hit.transform.rotation;
-                    SwapCam.CopyFrom(hit.transform.GetComponentInChildren<Camera>());
-
-                    hit.transform.position = this.transform.position;
-                    hit.transform.rotation = this.transform.rotation;
-                    hit.transform.GetComponentInParent<Camera>().CopyFrom(fpsCam);
-
-                    this.GetComponent<Camera>().CopyFrom(SwapCam);
-                    this.transform.position = SwapVector;
-                    this.transform.rotation = SwapRot;
-
-                }*/
-                    GameObject impactGameObj = Instantiate(gun.impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
-                    Destroy(impactGameObj, 1f);
+                if (hit.collider.name == "Body")
+                {
+                    hit.collider.GetComponentInParent<Motor>().receiveDMG(gun.dmg);
+                }
+                GameObject impactGameObj = Instantiate(gun.impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                Destroy(impactGameObj, 1f);
             }
         }
     }
+
+
+    public void mindShot()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, gun.range))
+        {
+
+            //Target target = hit.transform.GetComponent<Target>();
+            if (hit.collider.name == "mindSpot")
+            {
+                this.GetComponentInParent<GameManager>().Swap(this, hit.transform.GetComponentInParent<Motor>());
+                Invoke("swapMindAim", 1f);
+            }
+
+        }
+    }
+    void swapMindAim()
+    {
+        mindAim = false;
+    }
+
     Quaternion ClampRotationAroundXAxis(Quaternion q)
     {
         q.x /= q.w;
@@ -228,7 +230,8 @@ public class Motor : MonoBehaviour {
         hp = hp-dmg;
         if (hp <= 0)
         {
-            
+            GameObject deathGameObj = Instantiate(deathExplosion, transform.position, Quaternion.Euler(0, 0, 0));
+            Destroy(deathGameObj, 3f);
             Destroy(this.gameObject);
             
         }
