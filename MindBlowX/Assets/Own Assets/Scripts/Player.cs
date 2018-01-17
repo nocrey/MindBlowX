@@ -47,6 +47,8 @@ public class Player : Brain {
 
         if (Input.GetKey("e"))
         {
+            motor.zoomCamera();
+            motor.zooming = true;
             motor.mindAim = true;
             if (Input.GetButton("Fire1"))
             {
@@ -61,6 +63,7 @@ public class Player : Brain {
         if (Input.GetKeyUp("e"))
         {
             motor.mindAim = false;
+            motor.zooming = false;
         }
 
 

@@ -171,7 +171,7 @@ public class Motor : MonoBehaviour {
                     //Target target = hit.transform.GetComponent<Target>();
                 if (hit.collider.name == "weakPoint")
                 {
-                    this.GetComponentInParent<GameManager>().Swap(this, hit.transform.GetComponentInParent<Motor>());
+                    hit.collider.GetComponentInParent<Motor>().receiveDMG(20000);
                 }
 
                 if (hit.collider.name == "Body")
@@ -195,6 +195,7 @@ public class Motor : MonoBehaviour {
             if (hit.collider.name == "mindSpot")
             {
                 this.GetComponentInParent<GameManager>().Swap(this, hit.transform.GetComponentInParent<Motor>());
+                this.GetComponentInParent<GameManager>().playSwitch();
                 Invoke("swapMindAim", 1f);
             }
 
@@ -232,6 +233,7 @@ public class Motor : MonoBehaviour {
         {
             GameObject deathGameObj = Instantiate(deathExplosion, transform.position, Quaternion.Euler(0, 0, 0));
             Destroy(deathGameObj, 3f);
+            GetComponentInParent<GameManager>().roarStadium();
             Destroy(this.gameObject);
             
         }

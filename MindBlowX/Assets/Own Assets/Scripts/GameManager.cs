@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject[] arrayUnits;
+    public AudioSource[] arrayStadiumSounds;
     public Brain aux;
 
     Brain brainShooter, brainHitted;
@@ -14,6 +15,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Cursor.visible = false;
+        arrayStadiumSounds[0].Play();
     }
 
     // Update is called once per frame
@@ -66,5 +68,13 @@ public class GameManager : MonoBehaviour
 
         motorHitted.brain.Initialize(motorHitted);
         motorShooter.brain.Initialize(motorShooter);
+    }
+    public void roarStadium()
+    {
+        arrayStadiumSounds[1].Play();
+    }
+    public void playSwitch()
+    {
+        arrayStadiumSounds[2].Play();
     }
 }
