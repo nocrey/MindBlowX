@@ -14,6 +14,7 @@ public class Pistol : Gun {
         motor = _motor;
         nextTimeToFire = 0f;
         animator = motor.GetComponentInChildren<Animator>();
+        reloadTime = 1.05f;
 
     }
 

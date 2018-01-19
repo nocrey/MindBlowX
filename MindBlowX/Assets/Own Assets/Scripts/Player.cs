@@ -88,6 +88,11 @@ public class Player : Brain {
             motor.zooming = true;
 
         }
+        if (Input.GetKeyDown("f"))
+        {
+            motor.throwGrenade();
+
+        }
         if (Input.GetKeyUp("q"))
         {
             motor.zooming = false;

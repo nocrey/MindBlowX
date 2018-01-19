@@ -8,6 +8,8 @@ public class Motor : MonoBehaviour {
     public Camera cam;
     public Stats stats;
 
+    public GameObject grenadePrefab;
+
     private Vector3 velocity = Vector3.zero;
     private Vector3 rotation = Vector3.zero;
 
@@ -181,6 +183,10 @@ public class Motor : MonoBehaviour {
                 GameObject impactGameObj = Instantiate(gun.impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(impactGameObj, 1f);
             }
+            if (gun.currentAmmo == 0)
+            {
+                gun.animator.SetTrigger("NoAmmo");
+            }
         }
     }
 
@@ -237,5 +243,13 @@ public class Motor : MonoBehaviour {
             Destroy(this.gameObject);
             
         }
+    }
+
+    public void throwGrenade()
+    {
+        GameObject grenade = Instantiate(grenadePrefab, new Vector3(cam.transform.position.x-2, cam.transform.position.y+2, cam.transform.position.z), cam.transform.rotation);
+        Rigidbody rb = grenade.GetComponent<Rigidbody>();
+        rb.AddForce(cam.transform.forward * 40f, ForceMode.VelocityChange);
+        Destroy(grenade, 3f);
     }
 }
